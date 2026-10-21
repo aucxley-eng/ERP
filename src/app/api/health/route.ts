@@ -21,8 +21,17 @@ export async function GET() {
     db = { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
 
+  // Masked connection target (host + port + db only; never the password).
+  let target: string | null = null;
+  try {
+    const u = new URL(process.env.DATABASE_URL ?? "");
+    target = `${u.host}${u.pathname}`;
+  } catch {
+    target = "unparseable DATABASE_URL";
+  }
+
   return NextResponse.json(
-    { env, db, region: process.env.VERCEL_REGION ?? null },
+    { env, db, target, region: process.env.VERCEL_REGION ?? null },
     { status: db.ok ? 200 : 503 },
   );
 }
