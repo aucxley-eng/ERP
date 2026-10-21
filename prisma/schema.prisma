@@ -1,0 +1,514 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  BUYER
+  AGENT
+  ADMIN
+}
+
+enum ListingType {
+  FOR_SALE
+  FOR_RENT
+}
+
+enum PropertyType {
+  RESIDENTIAL_LAND
+  COMMERCIAL_LAND
+  AGRICULTURAL_LAND
+  HOUSE
+  APARTMENT
+  TOWNHOUSE
+  VILLA
+  COMMERCIAL_BUILDING
+  WAREHOUSE
+  OTHER
+}
+
+enum ListingStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+  REJECTED
+  SOLD
+  RENTED
+}
+
+enum LeadStage {
+  NEW
+  QUALIFYING
+  VIEWING
+  OFFER
+  WON
+  LOST
+}
+
+enum LeadSource {
+  WEBSITE_ENQUIRY
+  VIEWING_REQUEST
+  PHONE
+  WALK_IN
+  REFERRAL
+  OTHER
+}
+
+enum ViewingStatus {
+  REQUESTED
+  CONFIRMED
+  RESCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum DealStatus {
+  OPEN
+  OFFER
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum DocumentType {
+  SALE_AGREEMENT
+  LEASE_AGREEMENT
+  TITLE_DEED
+  ID_DOCUMENT
+  KYC
+  RECEIPT
+  INVOICE
+  OTHER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  MPESA
+  BANK_TRANSFER
+  CARD
+  CASH
+  CHEQUE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum CommissionParty {
+  COMPANY
+  AGENT
+  REFERRAL
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  phone         String?
+  role          Role      @default(BUYER)
+  avatarUrl     String?
+  bio           String?
+  company       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  listings      Property[]    @relation("AgentListings")
+  favorites     Favorite[]
+  savedSearches SavedSearch[]
+  inquiriesSent Inquiry[]     @relation("InquirySender")
+  inquiriesRecv Inquiry[]     @relation("InquiryAgent")
+
+  leadsAssigned   Lead[]        @relation("LeadAgent")
+  viewingsAsAgent Viewing[]     @relation("ViewingAgent")
+  viewingsAsBuyer Viewing[]     @relation("ViewingBuyer")
+  dealsAsAgent    Deal[]        @relation("DealAgent")
+  quotationsMade  Quotation[]   @relation("QuotationAgent")
+  documents       Document[]    @relation("DocumentUploader")
+  commissions     Commission[]  @relation("CommissionAgent")
+  activities      ActivityLog[] @relation("ActivityActor")
+  notifications   Notification[]
+}
+
+model Location {
+  id        String   @id @default(cuid())
+  county    String
+  town      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  properties Property[]
+
+  @@index([county])
+}
+
+model Property {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  title         String
+  description   String
+  listingType   ListingType
+  propertyType  PropertyType
+  status        ListingStatus  @default(PENDING)
+  price         Decimal        @db.Decimal(14, 2)
+  pricePeriod   String?
+  bedrooms      Int?
+  bathrooms     Int?
+  sizeSqft      Float?
+  sizeAcres     Float?
+  hasTitleDeed  Boolean        @default(false)
+  featured      Boolean        @default(false)
+  latitude      Float?
+  longitude     Float?
+  address       String?
+  amenities     String[]
+  views         Int            @default(0)
+
+  agentId       String
+  agent         User           @relation("AgentListings", fields: [agentId], references: [id], onDelete: Cascade)
+  locationId    String?
+  location      Location?      @relation(fields: [locationId], references: [id])
+
+  images        PropertyImage[]
+  favorites     Favorite[]
+  inquiries     Inquiry[]
+  leads         Lead[]
+  viewings      Viewing[]
+  deals         Deal[]
+  documents     Document[]
+
+  publishedAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([status, listingType, propertyType])
+  @@index([price])
+  @@index([agentId])
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  url        String
+  alt        String?
+  position   Int      @default(0)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+}
+
+model SavedSearch {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  listingType ListingType?
+  propertyType PropertyType?
+  county      String?
+  minPrice    Decimal?      @db.Decimal(14, 2)
+  maxPrice    Decimal?      @db.Decimal(14, 2)
+  minBedrooms Int?
+  createdAt   DateTime      @default(now())
+
+  @@index([userId])
+}
+
+model Inquiry {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  senderId   String?
+  sender     User?    @relation("InquirySender", fields: [senderId], references: [id], onDelete: SetNull)
+  agentId    String
+  agent      User     @relation("InquiryAgent", fields: [agentId], references: [id], onDelete: Cascade)
+  name       String
+  email      String
+  phone      String?
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  lead       Lead?
+
+  @@index([agentId, read])
+  @@index([propertyId])
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  stage       LeadStage  @default(NEW)
+  source      LeadSource @default(WEBSITE_ENQUIRY)
+
+  name        String
+  email       String
+  phone       String?
+  budgetMin   Decimal?   @db.Decimal(14, 2)
+  budgetMax   Decimal?   @db.Decimal(14, 2)
+  notes       String?
+
+  agentId     String
+  agent       User       @relation("LeadAgent", fields: [agentId], references: [id], onDelete: Cascade)
+  propertyId  String?
+  property    Property?  @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  inquiryId   String?    @unique
+  inquiry     Inquiry?   @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+
+  viewings    Viewing[]
+  deals       Deal[]
+  documents   Document[]
+  activities  ActivityLog[]
+
+  nextFollowUp DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([agentId, stage])
+  @@index([propertyId])
+}
+
+model Viewing {
+  id            String         @id @default(cuid())
+  status        ViewingStatus  @default(REQUESTED)
+  scheduledFor  DateTime
+  durationMins  Int            @default(60)
+  notes         String?
+  agentNotes    String?
+
+  propertyId    String
+  property      Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  agentId       String
+  agent         User           @relation("ViewingAgent", fields: [agentId], references: [id], onDelete: Cascade)
+  buyerId       String?
+  buyer         User?          @relation("ViewingBuyer", fields: [buyerId], references: [id], onDelete: SetNull)
+  leadId        String?
+  lead          Lead?          @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([agentId, scheduledFor])
+  @@index([propertyId, scheduledFor])
+  @@index([status])
+}
+
+model Deal {
+  id          String     @id @default(cuid())
+  status      DealStatus @default(OPEN)
+  title       String
+  amount      Decimal    @db.Decimal(14, 2)
+  notes       String?
+  closedAt    DateTime?
+
+  propertyId  String
+  property    Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  agentId     String
+  agent       User       @relation("DealAgent", fields: [agentId], references: [id], onDelete: Cascade)
+  leadId      String?
+  lead        Lead?      @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  quotations  Quotation[]
+  invoices    Invoice[]
+  documents   Document[]
+  commissions Commission[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([agentId, status])
+  @@index([propertyId])
+}
+
+model Quotation {
+  id           String           @id @default(cuid())
+  number       String           @unique
+  status       QuotationStatus  @default(DRAFT)
+  currency     String           @default("KES")
+  subtotal     Decimal          @db.Decimal(14, 2)
+  taxRate      Decimal          @db.Decimal(5, 2) @default(0)
+  taxAmount    Decimal          @db.Decimal(14, 2) @default(0)
+  total        Decimal          @db.Decimal(14, 2)
+  validUntil   DateTime?
+  terms        String?
+  notes        String?
+
+  dealId       String?
+  deal         Deal?            @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  agentId      String
+  agent        User             @relation("QuotationAgent", fields: [agentId], references: [id], onDelete: Cascade)
+
+  lines        QuotationLine[]
+
+  sentAt       DateTime?
+  acceptedAt   DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([agentId, status])
+  @@index([dealId])
+}
+
+model QuotationLine {
+  id          String    @id @default(cuid())
+  description String
+  quantity    Decimal   @db.Decimal(14, 2) @default(1)
+  unitPrice   Decimal   @db.Decimal(14, 2)
+  amount      Decimal   @db.Decimal(14, 2)
+  position    Int       @default(0)
+
+  quotationId String
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId])
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  number      String        @unique
+  status      InvoiceStatus @default(DRAFT)
+  currency    String        @default("KES")
+  subtotal    Decimal       @db.Decimal(14, 2)
+  taxAmount   Decimal       @db.Decimal(14, 2) @default(0)
+  total       Decimal       @db.Decimal(14, 2)
+  amountPaid  Decimal       @db.Decimal(14, 2) @default(0)
+  dueDate     DateTime?
+  notes       String?
+
+  dealId      String?
+  deal        Deal?         @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  propertyId  String?
+  payments    Payment[]
+
+  issuedAt    DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+  @@index([dealId])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  amount      Decimal       @db.Decimal(14, 2)
+  currency    String        @default("KES")
+  method      PaymentMethod
+  status      PaymentStatus @default(PENDING)
+  reference   String?
+  gatewayRef  String?
+  paidAt      DateTime?
+
+  invoiceId   String?
+  invoice     Invoice?      @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime      @default(now())
+
+  @@index([invoiceId])
+  @@index([status])
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  type        DocumentType @default(OTHER)
+  title       String
+  url         String
+  version     Int          @default(1)
+  notes       String?
+
+  propertyId  String?
+  property    Property?    @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  dealId      String?
+  deal        Deal?        @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  leadId      String?
+  lead        Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  uploaderId  String
+  uploader    User         @relation("DocumentUploader", fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime     @default(now())
+
+  @@index([propertyId])
+  @@index([dealId])
+  @@index([leadId])
+}
+
+model Commission {
+  id          String          @id @default(cuid())
+  party       CommissionParty
+  percent     Decimal         @db.Decimal(5, 2)
+  amount      Decimal         @db.Decimal(14, 2)
+  paid        Boolean         @default(false)
+  paidAt      DateTime?
+
+  dealId      String
+  deal        Deal            @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  agentId     String?
+  agent       User?           @relation("CommissionAgent", fields: [agentId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime        @default(now())
+
+  @@index([dealId])
+  @@index([agentId])
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  action      String
+  detail      String?
+  actorId     String?
+  actor       User?    @relation("ActivityActor", fields: [actorId], references: [id], onDelete: SetNull)
+  leadId      String?
+  lead        Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@index([leadId])
+  @@index([actorId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  body      String?
+  link      String?
+  read      Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
