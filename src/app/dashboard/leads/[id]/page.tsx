@@ -54,7 +54,7 @@ export default async function LeadDetailPage({ params }: Params) {
         <div className="space-y-6">
           <div className="rounded-xl border border-slate-200 bg-white p-5">
             <h2 className="mb-3 font-semibold text-slate-900">Details</h2>
-            <dl className="grid grid-cols-2 gap-3 text-sm">
+            <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
               <div>
                 <dt className="text-slate-400">Stage</dt>
                 <dd className="font-medium text-slate-900">{leadStageLabel(lead.stage)}</dd>

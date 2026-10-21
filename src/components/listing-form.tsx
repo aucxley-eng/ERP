@@ -168,14 +168,14 @@ export default function ListingForm({
 
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           disabled={pending}
           className="rounded-lg bg-brand px-6 py-2.5 font-semibold text-white hover:bg-brand-light disabled:opacity-60"
         >
           {pending ? "Saving..." : "Save listing"}
         </button>
-        <p className="self-center text-sm text-slate-500">
+        <p className="text-sm text-slate-500">
           New and edited listings are submitted for review.
         </p>
       </div>

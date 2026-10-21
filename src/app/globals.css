@@ -21,4 +21,14 @@ body {
 body {
   background: #f8fafc;
   color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* Prevent wide media and long words from causing horizontal page scroll on
+   small screens. Images using object-cover keep their own sizing. */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
 }

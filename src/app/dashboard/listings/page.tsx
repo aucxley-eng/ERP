@@ -23,7 +23,7 @@ export default async function DashboardListingsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <DashboardNav active="/dashboard/listings" />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-slate-900">My listings</h1>
         <Link
           href="/dashboard/listings/new"
@@ -34,8 +34,8 @@ export default async function DashboardListingsPage() {
       </div>
 
       {listings.length ? (
-        <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <table className="w-full text-left text-sm">
+        <div className="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
               <tr>
                 <th className="px-4 py-3">Property</th>
