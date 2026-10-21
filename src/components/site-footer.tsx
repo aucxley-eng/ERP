@@ -39,7 +39,16 @@ export default function SiteFooter() {
           <h3 className="text-sm font-semibold text-slate-900">Contact</h3>
           <ul className="mt-3 space-y-2 text-sm text-slate-500">
             <li>hello@erntproperties.co.ke</li>
-            <li>+254 700 000 000</li>
+            <li>
+              <a href="tel:+254722704137" className="hover:text-brand">
+                0722 704137
+              </a>
+            </li>
+            <li>
+              <a href="https://wa.me/254722704137" className="hover:text-brand">
+                WhatsApp
+              </a>
+            </li>
             <li>Nairobi, Kenya</li>
           </ul>
         </div>
