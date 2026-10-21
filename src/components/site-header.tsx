@@ -74,7 +74,7 @@ export default async function SiteHeader() {
                 Log in
               </Link>
               <a
-                href="tel:+254722704137"
+                href="tel:+254729859685"
                 aria-label="Call us"
                 className="grid h-10 w-10 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 sm:hidden"
               >

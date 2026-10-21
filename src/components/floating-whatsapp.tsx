@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const PHONE = "254722704137";
+const PHONE = "254729859685";
 const MESSAGE = encodeURIComponent(
   "Hi ERNT Properties, I'm interested in a property on your website.",
 );

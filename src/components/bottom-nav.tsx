@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const PHONE = "254722704137";
+const PHONE = "254729859685";
 const MESSAGE = encodeURIComponent(
   "Hi ERNT Properties, I'm interested in a property on your website.",
 );
@@ -48,6 +48,17 @@ export default function BottomNav({ signedIn }: { signedIn: boolean }) {
         <>
           <circle cx="12" cy="8" r="4" />
           <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" />
+        </>
+      ),
+    },
+    {
+      href: "/about",
+      label: "About",
+      active: pathname === "/about",
+      icon: (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 16v-5M12 8h.01" />
         </>
       ),
     },

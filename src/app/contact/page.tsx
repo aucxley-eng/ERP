@@ -19,12 +19,12 @@ export default function ContactPage() {
           </p>
           <p className="mt-4 text-sm text-slate-700">
             hello@erntproperties.co.ke<br />
-            <a href="tel:+254722704137" className="hover:text-brand">
-              0722 704137
+            <a href="tel:+254729859685" className="hover:text-brand">
+              0729 859685
             </a>
           </p>
           <a
-            href="https://wa.me/254722704137"
+            href="https://wa.me/254729859685"
             className="mt-4 inline-block rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
           >
             Chat on WhatsApp
