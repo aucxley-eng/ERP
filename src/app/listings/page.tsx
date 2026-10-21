@@ -74,7 +74,7 @@ export default async function ListingsPage({
 
         <div>
           {result.items.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
               {result.items.map((p) => <PropertyCard key={p.slug} property={p} />)}
             </div>
           ) : (

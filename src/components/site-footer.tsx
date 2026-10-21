@@ -2,8 +2,42 @@ import Link from "next/link";
 
 export default function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-slate-200 bg-white">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-12 border-t border-slate-200 bg-white md:mt-20">
+      {/* Mobile: minimal single strip */}
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 md:hidden">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-xs font-bold text-white">
+            ER
+          </span>
+          <span className="text-sm font-semibold text-slate-900">ERNT Properties</span>
+        </Link>
+        <div className="flex items-center gap-1">
+          <a
+            href="tel:+254722704137"
+            aria-label="Call us"
+            className="grid h-9 w-9 place-items-center rounded-full text-slate-600 hover:bg-slate-100"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 12.8 12.8 0 0 0 2.8.7 2 2 0 0 1 1.7 2z" />
+            </svg>
+          </a>
+          <a
+            href="https://wa.me/254722704137"
+            aria-label="WhatsApp"
+            className="grid h-9 w-9 place-items-center rounded-full text-emerald-600 hover:bg-emerald-50"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2a10 10 0 0 0-8.7 15L2 22l5.2-1.3A10 10 0 1 0 12 2z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <p className="px-4 pb-4 text-center text-xs text-slate-400 md:hidden">
+        © {new Date().getFullYear()} ERNT Properties
+      </p>
+
+      {/* Desktop: full columns */}
+      <div className="mx-auto hidden max-w-6xl gap-8 px-4 py-12 md:grid md:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-xs font-bold text-white">
@@ -53,7 +87,7 @@ export default function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+      <div className="hidden border-t border-slate-200 py-4 text-center text-xs text-slate-400 md:block">
         © {new Date().getFullYear()} ERNT Properties. All rights reserved.
       </div>
     </footer>

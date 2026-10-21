@@ -103,13 +103,11 @@ export default async function SiteHeader() {
           )}
         </div>
       </div>
-      <div className="hidden md:block">
-        <Suspense
-          fallback={<div className="mx-auto max-w-6xl px-4 pb-2.5 pt-0" aria-hidden><div className="h-9" /></div>}
-        >
-          <HeaderSearch />
-        </Suspense>
-      </div>
+      <Suspense
+        fallback={<div className="mx-auto max-w-6xl px-4 pb-2.5" aria-hidden><div className="h-9" /></div>}
+      >
+        <HeaderSearch />
+      </Suspense>
     </header>
   );
 }

@@ -48,7 +48,7 @@ export default function MobileNav({
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 pb-6 pt-2 shadow-lg"
+          className="fixed inset-x-0 top-[6.25rem] z-50 max-h-[calc(100vh-6.25rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 pb-6 pt-2 shadow-lg"
         >
           <nav className="flex flex-col">
             {links.map((l) => (

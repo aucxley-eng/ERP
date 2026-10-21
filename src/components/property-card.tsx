@@ -40,26 +40,26 @@ export default function PropertyCard({ property }: { property: PropertyCardData 
             No image
           </div>
         )}
-        <div className="absolute left-3 top-3 flex gap-2">
-          <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
+        <div className="absolute left-2 top-2 flex gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
+          <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-semibold text-white shadow-sm sm:px-3 sm:py-1 sm:text-xs">
             {listingTypeLabel(property.listingType)}
           </span>
           {property.featured && (
-            <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white shadow-sm">
+            <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-white shadow-sm sm:px-3 sm:py-1 sm:text-xs">
               Featured
             </span>
           )}
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-xl font-bold text-brand">
+      <div className="flex flex-1 flex-col p-2.5 sm:p-4">
+        <p className="text-base font-bold text-brand sm:text-xl">
           {formatPrice(property.price as number, property.listingType)}
         </p>
-        <h3 className="mt-1 line-clamp-2 font-semibold leading-snug text-slate-900">
+        <h3 className="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug text-slate-900 sm:mt-1 sm:text-base">
           {property.title}
         </h3>
-        <p className="mt-1 flex items-center gap-1 text-sm text-slate-500">
+        <p className="mt-1 flex items-center gap-1 text-xs text-slate-500 sm:text-sm">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
             <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11z" />
             <circle cx="12" cy="10" r="2.5" />
@@ -71,19 +71,19 @@ export default function PropertyCard({ property }: { property: PropertyCardData 
           </span>
         </p>
 
-        <div className="mt-auto flex flex-wrap gap-2 pt-3 text-xs text-slate-600">
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-2 text-[10px] text-slate-600 sm:gap-2 sm:pt-3 sm:text-xs">
           {property.bedrooms != null && (
-            <span className="rounded-lg bg-slate-100 px-2 py-1">{property.bedrooms} bed</span>
+            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 sm:rounded-lg sm:px-2 sm:py-1">{property.bedrooms} bed</span>
           )}
           {property.bathrooms != null && (
-            <span className="rounded-lg bg-slate-100 px-2 py-1">{property.bathrooms} bath</span>
+            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 sm:rounded-lg sm:px-2 sm:py-1">{property.bathrooms} bath</span>
           )}
-          <span className="rounded-lg bg-slate-100 px-2 py-1">
+          <span className="rounded-md bg-slate-100 px-1.5 py-0.5 sm:rounded-lg sm:px-2 sm:py-1">
             {propertyTypeLabel(property.propertyType)}
           </span>
-          {size && <span className="rounded-lg bg-slate-100 px-2 py-1">{size}</span>}
+          {size && <span className="rounded-md bg-slate-100 px-1.5 py-0.5 sm:rounded-lg sm:px-2 sm:py-1">{size}</span>}
           {property.hasTitleDeed && (
-            <span className="rounded-lg bg-emerald-50 px-2 py-1 text-emerald-700">
+            <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-emerald-700 sm:rounded-lg sm:px-2 sm:py-1">
               Title deed
             </span>
           )}
