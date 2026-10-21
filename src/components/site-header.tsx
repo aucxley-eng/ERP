@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { auth, signOut } from "@/auth";
 import MobileNav from "@/components/mobile-nav";
+import HeaderSearch from "@/components/header-search";
 
 const NAV_LINKS = [
   { href: "/listings", label: "Properties" },
@@ -100,6 +102,13 @@ export default async function SiteHeader() {
             </>
           )}
         </div>
+      </div>
+      <div className="hidden md:block">
+        <Suspense
+          fallback={<div className="mx-auto max-w-6xl px-4 pb-2.5 pt-0" aria-hidden><div className="h-9" /></div>}
+        >
+          <HeaderSearch />
+        </Suspense>
       </div>
     </header>
   );

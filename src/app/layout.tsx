@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
+import BottomNav from "@/components/bottom-nav";
 
 export const metadata: Metadata = {
   title: {
@@ -19,8 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen flex-col antialiased">
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-16 md:pb-0">{children}</main>
         <SiteFooter />
+        <BottomNav />
       </body>
     </html>
   );
