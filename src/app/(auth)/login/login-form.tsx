@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import PasswordInput from "@/components/password-input";
 import { authenticate, type AuthState } from "../actions";
 
 const initial: AuthState = {};
@@ -23,12 +24,7 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
-        <input
-          name="password"
-          type="password"
-          required
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand"
-        />
+        <PasswordInput name="password" required />
       </div>
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
       <button

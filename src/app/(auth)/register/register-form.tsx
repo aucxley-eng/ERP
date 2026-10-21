@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
+import PasswordInput from "@/components/password-input";
 import { register, type AuthState } from "../actions";
 
 const initial: AuthState = {};
@@ -60,13 +61,7 @@ export default function RegisterForm() {
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={6}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-brand"
-        />
+        <PasswordInput name="password" required minLength={6} />
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium text-slate-700">Phone (optional)</label>
