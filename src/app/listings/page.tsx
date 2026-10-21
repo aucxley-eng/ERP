@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import PropertyCard from "@/components/property-card";
 import { getPublishedProperties } from "@/lib/properties";
-import { COUNTIES, LISTING_TYPES, PROPERTY_TYPES } from "@/lib/constants";
+import FiltersPanel from "./filters-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -54,114 +55,30 @@ export default async function ListingsPage({
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-bold text-slate-900">Property listings</h1>
-      <p className="mt-1 text-slate-500">
-        {result.total} propert{result.total === 1 ? "y" : "ies"} found
-      </p>
+    <div className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
+      <div className="flex items-baseline justify-between gap-3">
+        <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+          Property listings
+        </h1>
+        <p className="text-sm text-slate-500">
+          {result.total} propert{result.total === 1 ? "y" : "ies"}
+        </p>
+      </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
-        <aside className="h-fit rounded-xl border border-slate-200 bg-white p-5">
-          <form method="get" className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Keyword</label>
-              <input
-                name="q"
-                defaultValue={filters.q ?? ""}
-                placeholder="Town, county..."
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Listing</label>
-              <select
-                name="listingType"
-                defaultValue={filters.listingType ?? ""}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-              >
-                <option value="">Any</option>
-                {LISTING_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Type</label>
-              <select
-                name="propertyType"
-                defaultValue={filters.propertyType ?? ""}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-              >
-                <option value="">Any</option>
-                {PROPERTY_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">County</label>
-              <select
-                name="county"
-                defaultValue={filters.county ?? ""}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-              >
-                <option value="">Any</option>
-                {COUNTIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Min (KSh)</label>
-                <input
-                  name="minPrice"
-                  type="number"
-                  defaultValue={filters.minPrice ?? ""}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Max (KSh)</label>
-                <input
-                  name="maxPrice"
-                  type="number"
-                  defaultValue={filters.maxPrice ?? ""}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand"
-                />
-              </div>
-            </div>
-
-            <label className="flex items-center gap-2 text-sm text-slate-700">
-              <input type="checkbox" name="hasTitleDeed" value="1" defaultChecked={filters.hasTitleDeed} />
-              Title deed available
-            </label>
-
-            <div className="flex gap-2 pt-2">
-              <button className="flex-1 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-light">
-                Apply
-              </button>
-              <Link
-                href="/listings"
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
-              >
-                Reset
-              </Link>
-            </div>
-          </form>
+      <div className="mt-5 grid gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
+        <aside className="lg:h-fit lg:rounded-xl lg:border lg:border-slate-200 lg:bg-white lg:p-5">
+          <Suspense fallback={<div className="h-12 rounded-xl border border-slate-200 bg-white lg:hidden" />}>
+            <FiltersPanel />
+          </Suspense>
         </aside>
 
         <div>
           {result.items.length ? (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
               {result.items.map((p) => <PropertyCard key={p.slug} property={p} />)}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-16 text-center">
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center sm:p-16">
               <p className="text-slate-600">No properties match your filters.</p>
               <Link href="/listings" className="mt-3 inline-block text-brand hover:underline">
                 Clear filters

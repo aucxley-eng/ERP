@@ -73,15 +73,25 @@ export default async function SiteHeader() {
             <>
               <Link
                 href="/login"
-                className="rounded-md px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-100"
+                className="hidden rounded-md px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-100 sm:block"
               >
                 Log in
               </Link>
+              <a
+                href="tel:+254722704137"
+                aria-label="Call us"
+                className="grid h-10 w-10 place-items-center rounded-lg text-slate-700 hover:bg-slate-100 sm:hidden"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4 12.8 12.8 0 0 0 2.8.7 2 2 0 0 1 1.7 2z" />
+                </svg>
+              </a>
               <Link
                 href="/register"
-                className="rounded-md bg-brand px-3 py-1.5 font-medium text-white hover:bg-brand-light sm:px-4"
+                className="rounded-full bg-brand px-4 py-2 font-medium text-white hover:bg-brand-light"
               >
-                List a property
+                <span className="hidden sm:inline">List a property</span>
+                <span className="sm:hidden">Sell</span>
               </Link>
               <MobileNav
                 links={NAV_LINKS}

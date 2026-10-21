@@ -18,6 +18,8 @@ export const PROPERTY_CARD_SELECT = {
   listingType: true,
   propertyType: true,
   price: true,
+  bedrooms: true,
+  bathrooms: true,
   sizeSqft: true,
   sizeAcres: true,
   hasTitleDeed: true,
