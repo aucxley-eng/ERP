@@ -5,7 +5,6 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, formatSize } from "@/lib/format";
 import { listingTypeLabel, propertyTypeLabel } from "@/lib/constants";
-import InquiryForm from "./inquiry-form";
 import ViewingForm from "./viewing-form";
 import { toggleFavorite } from "./actions";
 
@@ -60,6 +59,12 @@ export default async function PropertyPage({ params }: Params) {
 
   const size = formatSize(property.sizeSqft, property.sizeAcres);
   const isLand = property.propertyType.endsWith("_LAND");
+
+  const waPhone = property.agent.phone?.replace(/[^0-9]/g, "");
+  const waMessage = encodeURIComponent(
+    `Hi, I'm interested in this property on ERNT Properties: ${property.title} — ${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/listings/${property.slug}`,
+  );
+  const waHref = waPhone ? `https://wa.me/${waPhone}?text=${waMessage}` : null;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 pb-24 sm:py-10 lg:pb-10">
@@ -181,12 +186,14 @@ export default async function PropertyPage({ params }: Params) {
                 >
                   Call {property.agent.phone}
                 </a>
-                <a
-                  href={`https://wa.me/${property.agent.phone.replace(/[^0-9]/g, "")}`}
-                  className="mt-2 block rounded-lg bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-emerald-700"
-                >
-                  WhatsApp agent
-                </a>
+                {waHref && (
+                  <a
+                    href={waHref}
+                    className="mt-2 block rounded-lg bg-emerald-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-emerald-700"
+                  >
+                    WhatsApp agent
+                  </a>
+                )}
               </>
             )}
           </div>
@@ -196,17 +203,6 @@ export default async function PropertyPage({ params }: Params) {
               Book a viewing
             </h2>
             <ViewingForm
-              propertyId={property.id}
-              defaultName={session?.user?.name ?? undefined}
-              defaultEmail={session?.user?.email ?? undefined}
-            />
-          </div>
-
-          <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Enquire about this property
-            </h2>
-            <InquiryForm
               propertyId={property.id}
               defaultName={session?.user?.name ?? undefined}
               defaultEmail={session?.user?.email ?? undefined}
@@ -238,9 +234,9 @@ export default async function PropertyPage({ params }: Params) {
               Call
             </a>
           )}
-          {property.agent.phone && (
+          {waHref && (
             <a
-              href={`https://wa.me/${property.agent.phone.replace(/[^0-9]/g, "")}`}
+              href={waHref}
               className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 py-3 text-sm font-semibold text-white"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -253,7 +249,7 @@ export default async function PropertyPage({ params }: Params) {
             href="#enquire"
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-3 py-3 text-sm font-semibold text-white"
           >
-            Enquire
+            Book viewing
           </a>
         </div>
       </div>

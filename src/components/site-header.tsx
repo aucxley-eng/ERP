@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { auth, signOut } from "@/auth";
-import MobileNav from "@/components/mobile-nav";
 import HeaderSearch from "@/components/header-search";
 
 const NAV_LINKS = [
@@ -65,11 +64,6 @@ export default async function SiteHeader() {
                   Sign out
                 </button>
               </form>
-              <MobileNav
-                links={NAV_LINKS}
-                role={role}
-                signedIn={true}
-              />
             </>
           ) : (
             <>
@@ -95,10 +89,6 @@ export default async function SiteHeader() {
                 <span className="hidden sm:inline">List a property</span>
                 <span className="sm:hidden">Sell</span>
               </Link>
-              <MobileNav
-                links={NAV_LINKS}
-                signedIn={false}
-              />
             </>
           )}
         </div>

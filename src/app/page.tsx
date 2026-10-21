@@ -1,9 +1,8 @@
 import Link from "next/link";
 import PropertyCard from "@/components/property-card";
-import SearchBar from "@/components/search-bar";
 import { getPublishedProperties, PROPERTY_CARD_SELECT } from "@/lib/properties";
 import { prisma } from "@/lib/prisma";
-import { LISTING_TYPES, PROPERTY_TYPES } from "@/lib/constants";
+import { PROPERTY_TYPES } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -34,20 +33,25 @@ export default async function HomePage() {
             Kenya — with clear titles and responsive agents.
           </p>
 
-          <div className="mt-6 sm:mt-8">
-            <SearchBar />
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-2 text-sm">
-            {LISTING_TYPES.map((t) => (
-              <Link
-                key={t.value}
-                href={`/listings?listingType=${t.value}`}
-                className="rounded-full border border-white/30 px-4 py-1.5 hover:bg-white/10"
-              >
-                Browse {t.label}
-              </Link>
-            ))}
+          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+            <Link
+              href="/listings"
+              className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent/90 sm:text-base"
+            >
+              Browse properties
+            </Link>
+            <Link
+              href="/listings?listingType=FOR_SALE"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold hover:bg-white/10 sm:text-base"
+            >
+              For sale
+            </Link>
+            <Link
+              href="/listings?listingType=FOR_RENT"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold hover:bg-white/10 sm:text-base"
+            >
+              For rent
+            </Link>
           </div>
         </div>
       </section>
